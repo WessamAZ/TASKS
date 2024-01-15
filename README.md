@@ -31,7 +31,10 @@ The Solution:
 - Add ambientMap, diffuseMap,specularMap parameters with the texture parameter to "fs" and implement the texture in the main funcrion to get the finalcolor and the output color vector.
 
 ### Assignment 2b
-<!-- Briefly describe your solution. If you did not solve the assignment, simply enter "Not solved." -->
+The Solution:
+- Calculate tangent-to-world matrix in "vs" and pass it to "fs".
+- Texture the bumpMap with v_texcoord then multiply tangentToWorldMatrix with the texture and normlize it.
+- use the new normalized value instead of the old one on the shape.
 
 ### Assignment 2c
 <!-- Briefly describe your solution. If you did not solve the assignment, simply enter "Not solved." -->

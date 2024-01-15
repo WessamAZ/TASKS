@@ -228,17 +228,17 @@ function updateMaterialSelector(env, value) {
                 min: 1.0, max: 1000.0
             });
         }
-        if (m.shininess != undefined) {
+        if (m.x_position != undefined) {
             env.ui.materialPropertiesPane.addBinding(m, "x_position", {
                 min: 1.0, max: 100.0
             });
         }
-        if (m.shininess != undefined) {
+        if (m.y_position != undefined) {
             env.ui.materialPropertiesPane.addBinding(m, "y_position", {
                 min: 1.0, max: 100.0
             });
         }
-        if (m.shininess != undefined) {
+        if (m.z_position != undefined) {
             env.ui.materialPropertiesPane.addBinding(m, "z_position", {
                 min: 1.0, max: 100.0
             });
