@@ -4,7 +4,7 @@ function setupInterface(env) {
 
     env.ui.rootPane = new Pane({ title: "Parameters",
      container: document.querySelector("#pane"),
-     expanded: true });
+     expanded: false });
 
     const tab = env.ui.rootPane.addTab({
         pages: [
@@ -241,6 +241,21 @@ function updateMaterialSelector(env, value) {
         if (m.z_position != undefined) {
             env.ui.materialPropertiesPane.addBinding(m, "z_position", {
                 min: 1.0, max: 100.0
+            });
+        }
+        if (m.bumpIntensity != undefined) {
+            env.ui.materialPropertiesPane.addBinding(m, "bumpIntensity", {
+                min: 0.0, max: 1.0
+            });
+        }
+        if (m.bumpFrequency != undefined) {
+            env.ui.materialPropertiesPane.addBinding(m, "bumpFrequency", {
+                min: 1.0, max: 100.0
+            });
+        }
+        if (m.bumpAmplitude != undefined) {
+            env.ui.materialPropertiesPane.addBinding(m, "bumpAmplitude", {
+                min: 0.0, max: 1.0
             });
         }
         Object.entries(m)

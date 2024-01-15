@@ -8,16 +8,17 @@
 ## Assignment 1
 
 ### Assigment 1a
-Vertex shader (vs): Responsible for processing individual vertices, including transformations and passing data to the fragment shader.
-Fragment shader (fs): Determines the color output for each fragment based on interpolated attributes received from the vertex shader.
+The Solution:
+- Vertex shader (vs): Responsible for processing individual vertices, including transformations and passing data to the fragment shader.
+- Fragment shader (fs): Determines the color output for each fragment based on interpolated attributes received from the vertex shader.
 The solution:
-1- Adjust light position and direction in vertex shader "vs".
-2- outColor is the final color output of the fragment shader so Lighting calculations are performed, including diffuse and specular reflections, to determine the final color.
+1. Adjust light position and direction in vertex shader "vs".
+2. outColor is the final color output of the fragment shader so Lighting calculations are performed, including diffuse and specular reflections, to determine the final color.
 ### Assigment 1b
 The Solution:
-1- In vs: we replace the fixed values in Light position with parameters "we took those paraneters from defaultMaterial", I add those parameter to the user interface in Matierials Tab so the user can change them as he want.
-2- We can also change ambient, diffuse, specular and shininess from the same interface after we add those parameters to fs shader as parameters.
-3- we add "x_position,y_position,z_position" to the interface in util.js file.
+1. In vs: we replace the fixed values in Light position with parameters "we took those paraneters from defaultMaterial", I add those parameter to the user interface in Matierials Tab so the user can change them as he want.
+2. We can also change ambient, diffuse, specular and shininess from the same interface after we add those parameters to fs shader as parameters.
+3. we add "x_position,y_position,z_position" to the interface in util.js file.
 
 ### Assigment 1 Extras
 <!-- Describe any extra features that you implemented. Make sure to cite your sources. -->
@@ -37,7 +38,12 @@ The Solution:
 - use the new normalized value instead of the old one on the shape.
 
 ### Assignment 2c
-<!-- Briefly describe your solution. If you did not solve the assignment, simply enter "Not solved." -->
+The Solution:
+- Add bumpIntensity, bumpFrequency and bumpAmplitude parameters and Bump function to "fs" to control bumb mapping function.
+- The Bump function takes two parameters – normal (the original normal vector of the fragment) and texcoord (the texture coordinates of the fragment), It's modifies the original normal vector of a fragment by adding a sinusoidal displacement to simulate a bump mapping effect. The frequency and amplitude of the bumps can be controlled using the bumpFrequency, bumpAmplitude, and bumpIntensity parameters. Adjusting these parameters should allow us to fine-tune the appearance of the bump mapping effect on 3D model.
+The 'bumpFrequency' uniform is the frequency of the sinusoidal pattern (It controls how rapidly the bumps in the surface will change, A higher frequency results in more frequent bumps), The 'bumpAmplitude' uniform represents the amplitude or height of the bumps. The bumpIntensity parameter is multiplied here to allow external control over the intensity of the bump mapping effect, Adjusting 'bumpIntensity' should make the bump effect more or less pronounced.
+- Apply the function in fs main function.
+- Add bumpAmplitude, bumpFrequency, and bumpIntensity to materials interface in util.js file to control the parameter.
 
 ### Assigment 2 Extras
 <!-- Describe any extra features that you implemented. Make sure to cite your sources. -->
