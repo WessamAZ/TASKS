@@ -44,6 +44,7 @@
         // per-vertex attributes of our mesh
         in vec4 a_position;
         in vec3 a_normal;
+        in vec2 a_texcoord; // Add this line for texture coordinates
         /*
         in vec3 a_normal;
         in vec3 a_tangent;
@@ -55,6 +56,7 @@
         out vec4 v_position;
         out vec3 v_normal;
         out vec3 v_lightDir;
+        out vec2 v_texcoord; 
         /*
         out vec3 v_normal;
         out vec3 v_tangent;
@@ -67,11 +69,12 @@
          void main() {          
             gl_Position = modelViewProjection * a_position;
 
-            vec3 normal = normalize(mat3(transposeInverseModelView) * a_normal);
-            v_normal = normal;
-            vec4 lightPosition = vec4(x_position,y_position, z_position, 1.0); // Adjust light position as needed
-            vec3 lightDir = normalize(lightPosition.xyz - a_position.xyz);
-            v_lightDir = lightDir;
+    vec3 normal = normalize(mat3(transposeInverseModelView) * a_normal);
+    v_normal = normal;
+    vec4 lightPosition = vec4(x_position,y_position, z_position, 1.0); // Adjust light position as needed
+    vec3 lightDir = normalize(lightPosition.xyz - a_position.xyz);
+    v_lightDir = lightDir;
+    v_texcoord = a_texcoord; // Pass texture coordinates to fragment shader
         }
         </script>
 
@@ -84,6 +87,7 @@
         in vec4 v_position;
         in vec3 v_normal;
         in vec3 v_lightDir;
+        in vec2 v_texcoord; // Ensure this line is present for texture coordinates
         /*
         in vec3 v_normal;
         in vec3 v_tangent;
@@ -120,23 +124,26 @@
         uniform vec3 specular;
         uniform float shininess;
 
+        uniform sampler2D ambientMap;
+        uniform sampler2D diffuseMap;
+        uniform sampler2D specularMap;
         // the actual color output of the fragment shader
         out vec4 outColor;
-
         void main() {
-            vec3 normal = normalize(v_normal);
-            vec3 lightDir = normalize(v_lightDir);
+    vec3 normal = normalize(v_normal);
+    vec3 lightDir = normalize(v_lightDir);
 
-            float diff = max(dot(normal, lightDir), 0.0);
-            vec3 diffuseColor = diffuse * diff;
+    float diff = max(dot(normal, lightDir), 0.0);
+    vec3 diffuseColor = texture(diffuseMap, v_texcoord).rgb * diff;
 
-            vec3 viewDir = normalize(-v_lightDir);
-            vec3 reflectDir = reflect(-lightDir, normal);
-            float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
-            vec3 specularColor = specular * spec;
+    vec3 viewDir = normalize(-v_lightDir);
+    vec3 reflectDir = reflect(-lightDir, normal);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
+    //vec3 specularColor = specular * spec;
+    vec3 specularColor = texture(specularMap, v_texcoord).rgb * spec;
 
-            vec3 finalColor = ambient + diffuseColor + specularColor;
-            outColor = vec4(finalColor, 1.0);
+    vec3 finalColor = ambient * texture(ambientMap, v_texcoord).rgb + diffuseColor + specularColor ;
+    outColor = vec4(finalColor, 1.0);
         }
     </script>
 
@@ -220,14 +227,14 @@
         // restore data and settings
         restoreSession(environment, function (env) {
             // add any custom UI elements/input bindings here; make sure to add a proper default value to defaultSettings
-    //         const myFolder = env.ui.generalPane.addFolder({
-    //             title:"My Parameter",
-    //             expanded: true
-    //         });
-    //         myFolder.addBinding(env.settings,"myParameter", {
-    //             min: 0,
-    //             max: 100,
-            // });         
+            // const myFolder = env.ui.generalPane.addFolder({
+            //     title:"My Parameter",
+            //     expanded: true
+            // });
+            // myFolder.addBinding(env.settings,"myParameter", {
+            //     min: 0,
+            //     max: 100,
+            // });
         });
 
         // start the render loop

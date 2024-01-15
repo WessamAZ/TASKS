@@ -26,7 +26,9 @@ The Solution:
 ## Assignment 2
 
 ### Assignment 2a
-<!-- Briefly describe your solution. If you did not solve the assignment, simply enter "Not solved." -->
+The Solution:
+- To implement texture mapping we use textures (ambientMap, diffuseMap,specularMap), we will add texture coordinates parameters to "vs" and pass it to fragment shader "fs".
+- Add ambientMap, diffuseMap,specularMap parameters with the texture parameter to "fs" and implement the texture in the main funcrion to get the finalcolor and the output color vector.
 
 ### Assignment 2b
 <!-- Briefly describe your solution. If you did not solve the assignment, simply enter "Not solved." -->
