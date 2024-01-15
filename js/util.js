@@ -2,7 +2,9 @@
 function setupInterface(env) {
     env.controller = arcballController(env.gl.canvas, env);
 
-    env.ui.rootPane = new Pane({ title: "Parameters", container: document.querySelector("#pane") });
+    env.ui.rootPane = new Pane({ title: "Parameters",
+     container: document.querySelector("#pane"),
+     expanded: true });
 
     const tab = env.ui.rootPane.addTab({
         pages: [
@@ -223,10 +225,24 @@ function updateMaterialSelector(env, value) {
 
         if (m.shininess != undefined) {
             env.ui.materialPropertiesPane.addBinding(m, "shininess", {
-                min: 0.0, max: 1000.0
+                min: 1.0, max: 1000.0
             });
         }
-
+        if (m.shininess != undefined) {
+            env.ui.materialPropertiesPane.addBinding(m, "x_position", {
+                min: 1.0, max: 100.0
+            });
+        }
+        if (m.shininess != undefined) {
+            env.ui.materialPropertiesPane.addBinding(m, "y_position", {
+                min: 1.0, max: 100.0
+            });
+        }
+        if (m.shininess != undefined) {
+            env.ui.materialPropertiesPane.addBinding(m, "z_position", {
+                min: 1.0, max: 100.0
+            });
+        }
         Object.entries(m)
             .filter(([key]) => !key.startsWith("_") && key.endsWith("Map"))
             .forEach(([key]) => {

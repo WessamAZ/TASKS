@@ -14,7 +14,10 @@ The solution:
 1- Adjust light position and direction in vertex shader "vs".
 2- outColor is the final color output of the fragment shader so Lighting calculations are performed, including diffuse and specular reflections, to determine the final color.
 ### Assigment 1b
-<!-- Briefly describe your solution. If you did not solve the assignment, simply enter "Not solved." -->
+The Solution:
+1- In vs: we replace the fixed values in Light position with parameters "we took those paraneters from defaultMaterial", I add those parameter to the user interface in Matierials Tab so the user can change them as he want.
+2- We can also change ambient, diffuse, specular and shininess from the same interface after we add those parameters to fs shader as parameters.
+3- we add "x_position,y_position,z_position" to the interface in util.js file.
 
 ### Assigment 1 Extras
 <!-- Describe any extra features that you implemented. Make sure to cite your sources. -->

@@ -33,7 +33,6 @@
 
     <canvas id="canvas" tabindex="0" autofocus></canvas>
     <div id="pane"></div>
-    <div id="colorValue"></div>
     <!-- our vertex shader; it handles the processing of individual vertices, see https://www.khronos.org/opengl/wiki/Vertex_Shader -->
     <script id="vs" type="x-shader/x-vertex">
         #version 300 es
@@ -62,13 +61,15 @@
         out vec2 v_texcoord;
         out vec3 v_color;
         */
-        void main() {          
+        uniform float x_position;
+        uniform float y_position;
+        uniform float z_position;
+         void main() {          
             gl_Position = modelViewProjection * a_position;
 
             vec3 normal = normalize(mat3(transposeInverseModelView) * a_normal);
             v_normal = normal;
-
-            vec4 lightPosition = vec4(1.0,1.0, 1.0, 1.0); // Adjust light position as needed
+            vec4 lightPosition = vec4(x_position,y_position, z_position, 1.0); // Adjust light position as needed
             vec3 lightDir = normalize(lightPosition.xyz - a_position.xyz);
             v_lightDir = lightDir;
         }
@@ -118,7 +119,7 @@
         uniform vec3 diffuse;
         uniform vec3 specular;
         uniform float shininess;
-        
+
         // the actual color output of the fragment shader
         out vec4 outColor;
 
@@ -169,7 +170,10 @@
             ambient: [0, 0, 0],
             specular: [1, 1, 1],
             emissive: [0, 0, 0],
-            shininess: 400,
+            shininess: 100,
+            x_position: 1.0,
+            y_position: 1.0,
+            z_position: 1.0,
             ambientMap: "",
             diffuseMap: "",
             specularMap: "",
@@ -223,19 +227,8 @@
     //         myFolder.addBinding(env.settings,"myParameter", {
     //             min: 0,
     //             max: 100,
-            
-    // });
-// Assuming you have an HTML element to display the color value
-const colorValueElement = document.getElementById('colorValue');
-
-// Event listener to capture changes in the color input
-myFolder.on('change', (value) => {
-    // Assuming 'color1' is a property of env.settings
-    const color1Value = env.settings.color1;
-    
-
-});
-         });
+            // });         
+        });
 
         // start the render loop
         requestAnimationFrame(render);
