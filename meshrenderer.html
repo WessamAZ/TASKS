@@ -138,7 +138,6 @@
         uniform sampler2D specularMap;
         uniform sampler2D bumpMap;
 
-        
         uniform float bumpIntensity;
         uniform float bumpFrequency;
         uniform float bumpAmplitude;
@@ -161,14 +160,13 @@
 
             vec3 lightDir = normalize(v_lightDir);
 
-            //float diff = max(dot(normal, lightDir), 0.0);
             float diff = max(dot(bumpedNormal, lightDir), 0.0);
             vec3 diffuseColor = texture(diffuseMap, v_texcoord).rgb * diff;
+
 
             vec3 viewDir = normalize(-v_lightDir);
             vec3 reflectDir = reflect(-lightDir, bumpedNormal);
             float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
-            //vec3 specularColor = specular * spec;
             vec3 specularColor = texture(specularMap, v_texcoord).rgb * spec;
 
             vec3 finalColor = ambient * texture(ambientMap, v_texcoord).rgb + diffuseColor + specularColor ;
@@ -192,13 +190,6 @@
             // all custom parameters need to have a default value
             //myParameter: 50,
         };
-
-        // set up our default view matrix
-        const eye = [0, 0, 2.0 * Math.sqrt(3.0)];
-        const target = [0, 0, 0];
-        const up = [0, 1, 0];
-        defaultSettings.view = glMatrix.mat4.create();
-        glMatrix.mat4.lookAt(defaultSettings.view, eye, target, up);
 
         // our default material
         const defaultMaterial = {
@@ -240,6 +231,13 @@
                 framesPerSecond: 0,
             },
         };
+        // set up our default view matrix
+        var eye = [0, 0, 2.0 * Math.sqrt(3.0),100];
+        var target = [0, 0, 0];
+        var up = [0, 1, 0];
+        defaultSettings.view = glMatrix.mat4.create();
+        glMatrix.mat4.lookAt(defaultSettings.view, eye, target, up);
+
 
         let previousTime = null;
 
@@ -272,13 +270,56 @@
         // start the render loop
         requestAnimationFrame(render);
 
-        //
-        
+
+        function updateCameraView() {
+            var newEye = getCameraPosition()
+            var newTarget = [0, 1, 0];
+            var newUp = [0, 0, 1];
+            var environmentView = glMatrix.mat4.create();
+            environmentView = glMatrix.mat4.lookAt(environmentView, newEye, newTarget, newUp);
+            return environmentView;
+        }
+
+        function cubicBezier(t, p0, p1, p2, p3) {
+                var u = 1 - t;
+                var tt = t * t;
+                var uu = u * u;
+                var uuu = uu * u;
+                var ttt = tt * t;
+
+                var p = glMatrix.vec3.create();
+                glMatrix.vec3.scale(p, p0, uuu);
+                glMatrix.vec3.scaleAndAdd(p, p, p1, 3 * uu * t);
+                glMatrix.vec3.scaleAndAdd(p, p, p2, 3 * u * tt);
+                glMatrix.vec3.scaleAndAdd(p, p, p3, ttt);
+
+                return p;
+        }
+
+        function getCameraPosition(){
+            var controlPoints = [
+                                [-5, 2, 5],   // P0
+                                [-2, 2, 2],   // P1
+                                [2 , 2,-2],   // P2
+                                [5 , 2,-5]    // P3
+                            ];
+            // Calculate parameter 't' based on time or other factors
+            var t = (Math.sin(Date.now() * 0.0001) + 1) / 2; 
+
+            // Evaluate position on the Bézier curve
+            var position = cubicBezier(t, controlPoints[0], controlPoints[1], controlPoints[2], controlPoints[3]);
+
+            // Update the camera view matrix based on the new position
+            return position;
+
+        }
+
+        var environmentViewPre = glMatrix.mat4.create();
+        var keyframesList = [];
 
 
         // our render function
         function render(time) {
-
             if (!previousTime)
                 previousTime = time;
 
@@ -296,6 +337,27 @@
             gl.cullFace(gl.BACK);
             gl.clearColor(environment.settings.background.r, environment.settings.background.g, environment.settings.background.b, 1.0);
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+
+            var environmentView = environmentViewPre
+            if (!environment.settings.stopAnimationClicked)
+                environmentView = updateCameraView();
+                environmentViewPre = environmentView
+
+            if (environment.settings.keyframesClicked){
+                keyframesList.push(environmentView)
+                environment.settings.keyframesClicked = false
+            }
+            
+
+            if (environment.settings.removeKeyframeClicked){
+                keyframesList.pop(environmentView)
+                environment.settings.removeKeyframeClicked = false
+                if (keyframesList.length!=0)
+                    environmentViewPre = keyframesList[keyframesList.length-1]
+            }
+
+
 
             // check whether some geometry is loaded already
             if (environment.scene.geometries) {
@@ -331,7 +393,7 @@
 
                 // some common matrices that might come in handy
                 const modelView = glMatrix.mat4.create();
-                glMatrix.mat4.multiply(modelView, environment.settings.view, model);
+                glMatrix.mat4.multiply(modelView, environmentView, model);
 
                 const inverseModelView = glMatrix.mat4.create();
                 glMatrix.mat4.invert(inverseModelView, modelView);
@@ -394,7 +456,6 @@
             // we continuously render frames
             requestAnimationFrame(render);
         }
-
     </script>
 
 </body>

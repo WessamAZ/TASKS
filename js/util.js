@@ -109,7 +109,6 @@ function setupInterface(env) {
         ],
         value: "",
     });
-
 }
 
 // bind our UI controls to the settings
@@ -172,6 +171,53 @@ function setupBindings(env) {
     env.ui.materialSelector.on("change", function (e) {
         updateMaterialSelector(env, e.value);
     });
+    
+///////////////////////////////////////////////////////////////////////////
+    // Camera Animation
+    env.ui.cameraPane = env.ui.generalPane.addFolder({
+        title: "Camera Animation",
+        expanded: true
+        });
+    
+        env.ui.addKeyframeButton = env.ui.cameraPane.addButton({
+            title: "Add Keyframe"
+        });
+    
+        env.settings.keyframesClicked = false;
+        env.ui.addKeyframeButton.on("click", function () {
+            console.log("addKeyframeButton-JS");
+            env.settings.keyframesClicked= true;
+        });
+    
+        env.ui.removeKeyframeButton = env.ui.cameraPane.addButton({
+            title: "Remove Keyframe"
+        });
+    
+        env.settings.removeKeyframeClicked = false;
+        env.ui.removeKeyframeButton.on("click", function () {
+            console.log("removeKeyframeButton");
+            env.settings.removeKeyframeClicked = true;
+        });
+    
+        env.ui.startAnimationButton = env.ui.cameraPane.addButton({
+            title: "Start Animation"
+        });
+        env.settings.startAnimationClicked = false;
+        env.ui.startAnimationButton.on("click", function () {
+            console.log("startAnimationButton");
+            env.settings.startAnimationClicked = true;
+            env.settings.stopAnimationClicked = false;
+        });
+    
+        env.ui.stopAnimationButton = env.ui.cameraPane.addButton({
+            title: "Stop Animation"
+        });
+        env.settings.stopAnimationClicked = false;
+        env.ui.stopAnimationButton.on("click", function () {
+            console.log("stopAnimationButton");
+            env.settings.stopAnimationClicked = true;
+            env.settings.startAnimationClicked = false;
+        });
 }
 
 // update object properties pane on selection change
@@ -250,7 +296,7 @@ function updateMaterialSelector(env, value) {
         }
         if (m.bumpFrequency != undefined) {
             env.ui.materialPropertiesPane.addBinding(m, "bumpFrequency", {
-                min: 1.0, max: 100.0
+                min: 1.0, max: 20.0
             });
         }
         if (m.bumpAmplitude != undefined) {

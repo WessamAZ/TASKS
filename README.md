@@ -11,9 +11,10 @@
 The Solution:
 - Vertex shader (vs): Responsible for processing individual vertices, including transformations and passing data to the fragment shader.
 - Fragment shader (fs): Determines the color output for each fragment based on interpolated attributes received from the vertex shader.
-The solution:
+
 1. Adjust light position and direction in vertex shader "vs".
 2. outColor is the final color output of the fragment shader so Lighting calculations are performed, including diffuse and specular reflections, to determine the final color.
+
 ### Assigment 1b
 The Solution:
 1. In vs: we replace the fixed values in Light position with parameters "we took those paraneters from defaultMaterial", I add those parameter to the user interface in Matierials Tab so the user can change them as he want.
@@ -52,7 +53,13 @@ The 'bumpFrequency' uniform is the frequency of the sinusoidal pattern (It contr
 ## Assignment 3
 
 ### Assignment 3a
-<!-- Briefly describe your solution. If you did not solve the assignment, simply enter "Not solved." -->
+The Solution:
+- Set up default view matrix is to define the initial postion of our camera so we will build a funvtion to edit this position by time.
+- We build a helper fintions:
+    1. updateCameraView: we will use it to give the camera the new position.
+    2. cubicBezier: a function to define a curve to be the objects bath.
+    3. getCameraPosition: we use it to update the camera position depends on the cubic bezier function.
+    4. add "Camera Animation" section to the  General panale to control the camera through the following buttons (startAnimationButton,stopAnimationButton,addKeyframeButton,removeKeyframeButton).
 
 ### Assignment 3b
 <!-- Briefly describe your solution. If you did not solve the assignment, simply enter "Not solved." -->
